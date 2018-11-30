@@ -1,9 +1,10 @@
 package com.ace.trade.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class TradeGoods {
+public class TradeGoods implements Serializable {
     private Integer goodsId;
 
     private String goodsName;
@@ -15,6 +16,8 @@ public class TradeGoods {
     private String goodsDesc;
 
     private Date addTime;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getGoodsId() {
         return goodsId;
@@ -62,5 +65,21 @@ public class TradeGoods {
 
     public void setAddTime(Date addTime) {
         this.addTime = addTime;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", goodsId=").append(goodsId);
+        sb.append(", goodsName=").append(goodsName);
+        sb.append(", goodsNumber=").append(goodsNumber);
+        sb.append(", goodsPrice=").append(goodsPrice);
+        sb.append(", goodsDesc=").append(goodsDesc);
+        sb.append(", addTime=").append(addTime);
+        sb.append("]");
+        return sb.toString();
     }
 }

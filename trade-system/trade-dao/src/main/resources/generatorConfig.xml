@@ -8,6 +8,8 @@
     <classPathEntry location="C:\software\apache-maven-3.5.0\repository\mysql\mysql-connector-java\5.1.40\mysql-connector-java-5.1.40.jar"/>
 
     <context id="context" targetRuntime="MyBatis3">
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
         <commentGenerator>
             <property name="suppressAllComments" value="true"/>
             <property name="suppressDate" value="true"/>
@@ -21,19 +23,19 @@
         </javaTypeResolver>
 
         <!-- 实体类生成的位置 -->
-        <javaModelGenerator targetPackage="com.ace.trade.entity" targetProject="trade-system/trade-dao/src/main/java">
+        <javaModelGenerator targetPackage="com.ace.trade.entity" targetProject="D:\project\idea\ace-project\trade-system\trade-dao\src\main/java">
             <property name="enableSubPackages" value="false"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
         <!-- *Mapper.xml 文件的位置 -->
-        <sqlMapGenerator targetPackage="sqlmap.com.ace.trade.mapper" targetProject="trade-system/trade-dao/src/main/resources">
-            <property name="enableSubPackages" value="true"/>
+        <sqlMapGenerator targetPackage="sqlmap.com.ace.trade.mapper" targetProject="D:\project\idea\ace-project\trade-system\trade-dao\src\main/resources">
+            <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
 
         <!-- Mapper 接口文件的位置 -->
-        <javaClientGenerator targetPackage="com.ace.trade.mapper" targetProject="trade-system/trade-dao/src/main/java" type="XMLMAPPER">
-            <property name="enableSubPackages" value="true"/>
+        <javaClientGenerator targetPackage="com.ace.trade.mapper" targetProject="D:\project\idea\ace-project\trade-system\trade-dao\src\main/java" type="XMLMAPPER">
+            <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
 
         <!-- 相关表的配置 -->

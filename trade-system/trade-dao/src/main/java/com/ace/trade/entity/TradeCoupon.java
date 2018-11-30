@@ -1,9 +1,10 @@
 package com.ace.trade.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class TradeCoupon {
+public class TradeCoupon implements Serializable {
     private String couponId;
 
     private BigDecimal couponPrice;
@@ -15,6 +16,8 @@ public class TradeCoupon {
     private String isUsed;
 
     private Date usedTime;
+
+    private static final long serialVersionUID = 1L;
 
     public String getCouponId() {
         return couponId;
@@ -62,5 +65,21 @@ public class TradeCoupon {
 
     public void setUsedTime(Date usedTime) {
         this.usedTime = usedTime;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", couponId=").append(couponId);
+        sb.append(", couponPrice=").append(couponPrice);
+        sb.append(", userId=").append(userId);
+        sb.append(", orderId=").append(orderId);
+        sb.append(", isUsed=").append(isUsed);
+        sb.append(", usedTime=").append(usedTime);
+        sb.append("]");
+        return sb.toString();
     }
 }

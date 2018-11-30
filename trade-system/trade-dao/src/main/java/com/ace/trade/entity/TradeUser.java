@@ -1,9 +1,10 @@
 package com.ace.trade.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class TradeUser {
+public class TradeUser implements Serializable {
     private Integer userId;
 
     private String userName;
@@ -17,6 +18,8 @@ public class TradeUser {
     private Date userRegTime;
 
     private BigDecimal userMoney;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getUserId() {
         return userId;
@@ -72,5 +75,22 @@ public class TradeUser {
 
     public void setUserMoney(BigDecimal userMoney) {
         this.userMoney = userMoney;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", userId=").append(userId);
+        sb.append(", userName=").append(userName);
+        sb.append(", userPassword=").append(userPassword);
+        sb.append(", userMobile=").append(userMobile);
+        sb.append(", userScore=").append(userScore);
+        sb.append(", userRegTime=").append(userRegTime);
+        sb.append(", userMoney=").append(userMoney);
+        sb.append("]");
+        return sb.toString();
     }
 }

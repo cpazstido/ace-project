@@ -1,9 +1,10 @@
 package com.ace.trade.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class TradeOrder {
+public class TradeOrder implements Serializable {
     private String orderId;
 
     private Integer userId;
@@ -43,6 +44,8 @@ public class TradeOrder {
     private Date confirmTime;
 
     private Date payTime;
+
+    private static final long serialVersionUID = 1L;
 
     public String getOrderId() {
         return orderId;
@@ -202,5 +205,35 @@ public class TradeOrder {
 
     public void setPayTime(Date payTime) {
         this.payTime = payTime;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", orderId=").append(orderId);
+        sb.append(", userId=").append(userId);
+        sb.append(", orderStatus=").append(orderStatus);
+        sb.append(", payStatus=").append(payStatus);
+        sb.append(", shoppingStatus=").append(shoppingStatus);
+        sb.append(", address=").append(address);
+        sb.append(", consignee=").append(consignee);
+        sb.append(", goodsId=").append(goodsId);
+        sb.append(", goodsNumber=").append(goodsNumber);
+        sb.append(", goodsPrice=").append(goodsPrice);
+        sb.append(", goodsAmount=").append(goodsAmount);
+        sb.append(", shoppingFee=").append(shoppingFee);
+        sb.append(", orderAmount=").append(orderAmount);
+        sb.append(", couponId=").append(couponId);
+        sb.append(", couponPaid=").append(couponPaid);
+        sb.append(", moneyPaid=").append(moneyPaid);
+        sb.append(", payAmount=").append(payAmount);
+        sb.append(", addTime=").append(addTime);
+        sb.append(", confirmTime=").append(confirmTime);
+        sb.append(", payTime=").append(payTime);
+        sb.append("]");
+        return sb.toString();
     }
 }
