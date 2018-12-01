@@ -13,6 +13,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-client</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.ace</groupId>
             <artifactId>trade-common</artifactId>
             <version>1.0-SNAPSHOT</version>
@@ -46,8 +50,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
-
-
     </dependencies>
 
 </project>
