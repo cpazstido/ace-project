@@ -7,4 +7,20 @@
         <property name="serviceInterface" value="com.ace.trade.common.api.IUserApi"/>
         <property name="serverEnum" value="USER"/>
     </bean>
+    <bean id="couponClient" class="com.ace.trade.common.client.RestClientProxyFactoryBeanSpring">
+        <property name="serviceInterface" value="com.ace.trade.common.api.IGoodsApi"/>
+        <property name="serverEnum" value="COUPON"/>
+    </bean>
+    <bean id="goodsClient" class="com.ace.trade.common.client.RestClientProxyFactoryBeanSpring">
+        <property name="serviceInterface" value="com.ace.trade.common.api.IGoodsApi"/>
+        <property name="serverEnum" value="GOODS"/>
+    </bean>
+    <bean id="orderClient" class="com.ace.trade.common.client.RestClientProxyFactoryBeanSpring">
+        <property name="serviceInterface" value="com.ace.trade.common.api.IOrderApi"/>
+        <property name="serverEnum" value="ORDER"/>
+    </bean>
+    <bean id="payClient" class="com.ace.trade.common.client.RestClientProxyFactoryBeanSpring">
+        <property name="serviceInterface" value="com.ace.trade.common.api.IPayApi"/>
+        <property name="serverEnum" value="PAY"/>
+    </bean>
 </beans>
