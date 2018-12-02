@@ -7,7 +7,7 @@ import com.ace.trade.common.protocol.order.ConfirmOrderReq;
 import com.ace.trade.common.protocol.order.ConfirmOrderRes;
 import com.ace.trade.common.protocol.user.QueryUserReq;
 import com.ace.trade.common.protocol.user.QueryUserRes;
-import com.alibaba.fastjson.JSON;
+import com.alibaba.rocketmq.shade.com.alibaba.fastjson.JSON;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

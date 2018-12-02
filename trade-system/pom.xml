@@ -20,7 +20,7 @@
     </modules>
 
     <properties>
-        <rocketmq.version>4.3.0</rocketmq.version>
+        <rocketmq.version>3.5.8</rocketmq.version>
         <spring.version>3.2.17.RELEASE</spring.version>
     </properties>
 
@@ -50,7 +50,7 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.apache.rocketmq</groupId>
+                <groupId>com.alibaba.rocketmq</groupId>
                 <artifactId>rocketmq-client</artifactId>
                 <version>${rocketmq.version}</version>
             </dependency>

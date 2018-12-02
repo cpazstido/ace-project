@@ -3,12 +3,17 @@ package com.ace.trade.common.rocketmq;
 import com.ace.trade.common.constants.MQEnums;
 import com.ace.trade.common.exception.AceMQException;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.rocketmq.client.exception.MQClientException;
-import org.apache.rocketmq.client.producer.DefaultMQProducer;
-import org.apache.rocketmq.client.producer.SendResult;
-import org.apache.rocketmq.common.message.Message;
+import com.alibaba.rocketmq.client.exception.MQBrokerException;
+import com.alibaba.rocketmq.client.exception.MQClientException;
+import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
+import com.alibaba.rocketmq.client.producer.SendResult;
+import com.alibaba.rocketmq.common.message.Message;
+import com.alibaba.rocketmq.remoting.common.RemotingHelper;
+import com.alibaba.rocketmq.remoting.exception.RemotingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.UnsupportedEncodingException;
 
 public class AceMQProducer {
     public static Logger LOGGER = LoggerFactory.getLogger(AceMQProducer.class);
@@ -66,20 +71,40 @@ public class AceMQProducer {
         if(StringUtils.isBlank(messageText)){
             throw new AceMQException("messageText is blank!");
         }
-        Message message = new Message(topic,tags,keys,messageText.getBytes());
 
+        SendResult sendResult = null;
         try {
-            SendResult sendResult = this.producer.send(message);
-            return sendResult;
-        } catch (Exception e) {
-            LOGGER.error("send message error:\ntopic:{}\ntags:{}\nkeys:{}\nmessage:{}\n",
-                    topic,
-                    tags,
-                    keys,
-                    messageText,
-                    e.getMessage(),e);
-            throw new AceMQException(e);
+            Message msg = new Message("TopicTest",
+                    "TagA",
+                    "OrderID188",
+                    "Hello world".getBytes(RemotingHelper.DEFAULT_CHARSET));
+            sendResult = producer.send(msg);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (MQClientException e) {
+            e.printStackTrace();
+        } catch (RemotingException e) {
+            e.printStackTrace();
+        } catch (MQBrokerException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+        return sendResult;
+//        Message message = new Message(topic,tags,keys,messageText.getBytes());
+//
+//        try {
+//            SendResult sendResult = this.producer.send(message);
+//            return sendResult;
+//        } catch (Exception e) {
+//            LOGGER.error("send message error:\ntopic:{}\ntags:{}\nkeys:{}\nmessage:{}\n",
+//                    topic,
+//                    tags,
+//                    keys,
+//                    messageText,
+//                    e.getMessage(),e);
+//            throw new AceMQException(e);
+//        }
     }
 
     public SendResult sendMessage(MQEnums.TopicEnum topicEnum,String keys, String messageText) throws AceMQException {

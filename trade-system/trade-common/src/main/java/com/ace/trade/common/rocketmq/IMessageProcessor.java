@@ -1,6 +1,6 @@
 package com.ace.trade.common.rocketmq;
 
-import org.apache.rocketmq.common.message.MessageExt;
+import com.alibaba.rocketmq.common.message.MessageExt;
 
 public interface IMessageProcessor {
     /**

@@ -28,12 +28,12 @@ import com.ace.trade.entity.TradeOrder;
 import com.ace.trade.mapper.TradeOrderMapper;
 import com.ace.trade.order.service.IOrderService;
 import com.alibaba.druid.support.json.JSONUtils;
-import com.alibaba.fastjson.JSON;
+import com.alibaba.rocketmq.shade.com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import org.apache.rocketmq.client.producer.SendResult;
+import com.alibaba.rocketmq.client.producer.SendResult;
 import java.math.BigDecimal;
 import java.util.Date;
 

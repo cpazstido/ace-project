@@ -12,7 +12,7 @@
     <artifactId>trade-common</artifactId>
     <dependencies>
         <dependency>
-            <groupId>org.apache.rocketmq</groupId>
+            <groupId>com.alibaba.rocketmq</groupId>
             <artifactId>rocketmq-client</artifactId>
         </dependency>
         <dependency>

@@ -1,6 +1,6 @@
 import com.ace.trade.common.exception.AceMQException;
 import com.ace.trade.common.rocketmq.AceMQProducer;
-import org.apache.rocketmq.client.producer.SendResult;
+import com.alibaba.rocketmq.client.producer.SendResult;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
