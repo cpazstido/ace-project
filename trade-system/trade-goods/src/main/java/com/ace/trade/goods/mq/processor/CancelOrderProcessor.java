@@ -4,7 +4,6 @@ import com.ace.trade.common.constants.MQEnums;
 import com.ace.trade.common.constants.TradeEnum;
 import com.ace.trade.common.protocol.goods.AddGoodsNumberReq;
 import com.ace.trade.common.protocol.mq.CancelOrderMQ;
-import com.ace.trade.common.protocol.user.ChangeUserMoneyReq;
 import com.ace.trade.common.rocketmq.IMessageProcessor;
 import com.ace.trade.entity.TradeMqConsumerLog;
 import com.ace.trade.entity.TradeMqConsumerLogExample;

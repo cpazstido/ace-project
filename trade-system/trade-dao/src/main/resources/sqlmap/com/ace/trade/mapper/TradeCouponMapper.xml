@@ -228,7 +228,7 @@
   <update id="useCoupon" parameterType="com.ace.trade.entity.TradeCoupon">
     update trade_coupon
     set is_used = '1',
-    order_id = #{userId,jdbcType=INTEGER},
+    order_id = #{orderId,jdbcType=VARCHAR},
     used_time = now()
     where coupon_id = #{couponId,jdbcType=VARCHAR}
     and is_used = '0'

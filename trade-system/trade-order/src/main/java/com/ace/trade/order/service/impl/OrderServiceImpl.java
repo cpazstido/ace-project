@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.rocketmq.client.producer.SendResult;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -54,16 +55,13 @@ public class OrderServiceImpl implements IOrderService {
         ConfirmOrderRes confirmOrderRes = new ConfirmOrderRes();
         confirmOrderRes.setRetCode(TradeEnum.RetEnum.SUCCESS.getCode());
         try {
-            QueryGoodsReq queryGoodsReq = new QueryGoodsReq();
-            queryGoodsReq.setGoodsId(confirmOrderReq.getGoodsId());
-            QueryGoodsRes queryGoodsRes = goodsApi.queryGoods(queryGoodsReq);
             //1、检查校验
-            checkConfirmOrderReq(confirmOrderReq, queryGoodsRes);
+            checkConfirmOrderReq(confirmOrderReq);
             //2、创建不可见订单
             String orderId = saveNoConfirmOrder(confirmOrderReq);
             confirmOrderRes.setOrderId(orderId);
             //3、调用远程服务，扣优惠券、扣库存、扣余额，如果调用成功-》更改订单状态可见；失败-》发送MQ消息，进行取消订单
-            callRemoteService(orderId,confirmOrderReq);
+            callRemoteService(orderId, confirmOrderReq);
         } catch (Exception e) {
             confirmOrderRes.setRetCode(TradeEnum.RetEnum.FAIL.getCode());
             confirmOrderRes.setRetInfo(e.getMessage());
@@ -72,29 +70,29 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     //调用远程服务，扣优惠券、扣库存、扣余额，如果调用成功-》更改订单状态可见；失败-》发送MQ消息，进行取消订单
-    public void callRemoteService(String orderId,ConfirmOrderReq confirmOrderReq){
+    public void callRemoteService(String orderId, ConfirmOrderReq confirmOrderReq) {
         try {
             //调用优惠券
-            if(StringUtils.isNoneBlank(confirmOrderReq.getCouponId())){
+            if (StringUtils.isNoneBlank(confirmOrderReq.getCouponId())) {
                 ChangeCouponStatusReq changeCouponStatusReq = new ChangeCouponStatusReq();
                 changeCouponStatusReq.setCouponId(confirmOrderReq.getCouponId());
                 changeCouponStatusReq.setIsUsed(TradeEnum.YesNoEnum.YES.getCode());
                 changeCouponStatusReq.setOrderId(orderId);
                 ChangeCouponStatusRes changeCouponStatusRes = couponApi.changeCouponStatus(changeCouponStatusReq);
-                if(!changeCouponStatusRes.getRetCode().equals(TradeEnum.RetEnum.SUCCESS.getCode())){
+                if (!changeCouponStatusRes.getRetCode().equals(TradeEnum.RetEnum.SUCCESS.getCode())) {
                     throw new Exception("优惠券使用失败！");
                 }
             }
 
             //扣余额
-            if(confirmOrderReq.getMoneyPaid()!=null&&confirmOrderReq.getMoneyPaid().compareTo(BigDecimal.ZERO)==1){
+            if (confirmOrderReq.getMoneyPaid() != null && confirmOrderReq.getMoneyPaid().compareTo(BigDecimal.ZERO) == 1) {
                 ChangeUserMoneyReq changeUserMoneyReq = new ChangeUserMoneyReq();
                 changeUserMoneyReq.setOrderId(orderId);
                 changeUserMoneyReq.setUserId(confirmOrderReq.getUserId());
-                changeUserMoneyReq.setUserMoney(changeUserMoneyReq.getUserMoney());
+                changeUserMoneyReq.setUserMoney(confirmOrderReq.getMoneyPaid());
                 changeUserMoneyReq.setMoneyLogType(TradeEnum.UserMoneyLogTypeEnum.PAID.getCode());
                 ChangeUserMoneyRes changeUserMoneyRes = userApi.changeUserMoney(changeUserMoneyReq);
-                if(!changeUserMoneyRes.getRetCode().equals(TradeEnum.RetEnum.SUCCESS.getCode())){
+                if (!changeUserMoneyRes.getRetCode().equals(TradeEnum.RetEnum.SUCCESS.getCode())) {
                     throw new Exception("扣用户余额失败！");
                 }
             }
@@ -105,7 +103,7 @@ public class OrderServiceImpl implements IOrderService {
             reduceGoodsNumberReq.setGoodsId(confirmOrderReq.getGoodsId());
             reduceGoodsNumberReq.setGoodsNumber(confirmOrderReq.getGoodsNumber());
             ReduceGoodsNumberRes reduceGoodsNumberRes = goodsApi.reduceGoodsNumber(reduceGoodsNumberReq);
-            if(!reduceGoodsNumberRes.getRetCode().equals(TradeEnum.RetEnum.SUCCESS.getCode())){
+            if (!reduceGoodsNumberRes.getRetCode().equals(TradeEnum.RetEnum.SUCCESS.getCode())) {
                 throw new Exception("扣库存失败！");
             }
 
@@ -114,8 +112,8 @@ public class OrderServiceImpl implements IOrderService {
             tradeOrder.setOrderId(orderId);
             tradeOrder.setOrderStatus(TradeEnum.OrderStatusEnum.CONFIRM.getStatusCode());
             tradeOrder.setConfirmTime(new Date());
-            int i=tradeOrderMapper.updateByPrimaryKeySelective(tradeOrder);
-            if(i<=0){
+            int i = tradeOrderMapper.updateByPrimaryKeySelective(tradeOrder);
+            if (i <= 0) {
                 throw new Exception("更改订单状态失败！");
             }
         } catch (Exception e) {
@@ -128,7 +126,7 @@ public class OrderServiceImpl implements IOrderService {
             cancelOrderMQ.setCouponId(confirmOrderReq.getCouponId());
             cancelOrderMQ.setUserMoney(confirmOrderReq.getMoneyPaid());
             try {
-                SendResult sendResult = aceMQProducer.sendMessage(MQEnums.TopicEnum.ORDER_CANCEL,orderId, JSON.toJSONString(cancelOrderMQ));
+                SendResult sendResult = aceMQProducer.sendMessage(MQEnums.TopicEnum.ORDER_CANCEL, orderId, JSON.toJSONString(cancelOrderMQ));
                 System.out.println(sendResult);
             } catch (AceMQException ex) {
                 //如果发送失败会有一个定时器轮询，找出长时间未确认的订单，补发取消消息
@@ -153,54 +151,54 @@ public class OrderServiceImpl implements IOrderService {
         BigDecimal goodsAmount = confirmOrderReq.getGoodsPrice().multiply(new BigDecimal((confirmOrderReq.getGoodsNumber())));
         tradeOrder.setGoodsAmount(goodsAmount);
         BigDecimal shippingFee = calculateShippingFee(goodsAmount);
-        if(confirmOrderReq.getShippingFee().compareTo(shippingFee)!=0){
+        if (confirmOrderReq.getShippingFee().compareTo(shippingFee) != 0) {
             throw new Exception("快递费用不正确");
         }
         tradeOrder.setShoppingFee(shippingFee);
         BigDecimal orderAmount = goodsAmount.add(shippingFee);
-        if(orderAmount.compareTo(confirmOrderReq.getOrderAmount())!=0){
+        if (orderAmount.compareTo(confirmOrderReq.getOrderAmount()) != 0) {
             throw new Exception("订单总价异常，请重新下单");
         }
         tradeOrder.setOrderAmount(orderAmount);
         String couponId = confirmOrderReq.getCouponId();
         //优惠券不为空
-        if(StringUtils.isNoneBlank(couponId)){
+        if (StringUtils.isNoneBlank(couponId)) {
             //查询优惠券状态
             QueryCouponReq queryCouponReq = new QueryCouponReq();
             queryCouponReq.setCouponId(couponId);
             QueryCouponRes queryCouponRes = couponApi.queryCoupon(queryCouponReq);
-            if(queryCouponRes==null||!queryCouponRes.getRetCode().equals(TradeEnum.RetEnum.SUCCESS.getCode())){
+            if (queryCouponRes == null || !queryCouponRes.getRetCode().equals(TradeEnum.RetEnum.SUCCESS.getCode())) {
                 throw new Exception("优惠券非法");
             }
-            if(!queryCouponRes.getIsUsed().equals(TradeEnum.YesNoEnum.NO.getCode())){
+            if (!queryCouponRes.getIsUsed().equals(TradeEnum.YesNoEnum.NO.getCode())) {
                 throw new Exception("优惠券已使用");
             }
             tradeOrder.setCouponId(couponId);
             tradeOrder.setCouponPaid(queryCouponRes.getCouponPrice());
-        }else {
+        } else {
             tradeOrder.setCouponPaid(BigDecimal.ZERO);
         }
 
         //余额支付
-        if(confirmOrderReq.getMoneyPaid()!=null){
+        if (confirmOrderReq.getMoneyPaid() != null) {
             int r = confirmOrderReq.getMoneyPaid().compareTo(BigDecimal.ZERO);
-            if(r == -1){
+            if (r == -1) {
                 throw new Exception("余额金额非法");
             }
-            if(r == 1){
+            if (r == 1) {
                 //判断当前账户余额是否足够
                 QueryUserReq queryUserReq = new QueryUserReq();
                 queryUserReq.setUserId(confirmOrderReq.getUserId());
                 QueryUserRes queryUserRes = userApi.queryUserById(queryUserReq);
-                if(queryUserRes==null||!queryUserRes.getRetCode().equals(TradeEnum.RetEnum.SUCCESS.getCode())){
-                    throw  new Exception("用户非法");
+                if (queryUserRes == null || !queryUserRes.getRetCode().equals(TradeEnum.RetEnum.SUCCESS.getCode())) {
+                    throw new Exception("用户非法");
                 }
-                if(queryUserRes.getUserMoney().compareTo(confirmOrderReq.getMoneyPaid())==-1){
+                if (queryUserRes.getUserMoney().compareTo(confirmOrderReq.getMoneyPaid()) == -1) {
                     throw new Exception("余额不足");
                 }
                 tradeOrder.setMoneyPaid(confirmOrderReq.getMoneyPaid());
             }
-        }else {
+        } else {
             tradeOrder.setMoneyPaid(BigDecimal.ZERO);
         }
         BigDecimal payAmount = orderAmount.subtract(tradeOrder.getMoneyPaid()).subtract(tradeOrder.getCouponPaid());
@@ -208,13 +206,13 @@ public class OrderServiceImpl implements IOrderService {
         tradeOrder.setAddTime(new Date());
 
         int ret = this.tradeOrderMapper.insert(tradeOrder);
-        if(ret!=1){
+        if (ret != 1) {
             throw new Exception("保存不可见订单失败！");
         }
         return tradeOrder.getOrderId();
     }
 
-    private void checkConfirmOrderReq(ConfirmOrderReq confirmOrderReq, QueryGoodsRes queryGoodsRes) {
+    private void checkConfirmOrderReq(ConfirmOrderReq confirmOrderReq) {
         if (confirmOrderReq == null) {
             throw new AceOrderException("下单信息不能为空");
         }
@@ -235,6 +233,9 @@ public class OrderServiceImpl implements IOrderService {
             throw new AceOrderException("收货地址不能为空");
         }
 
+        QueryGoodsReq queryGoodsReq = new QueryGoodsReq();
+        queryGoodsReq.setGoodsId(confirmOrderReq.getGoodsId());
+        QueryGoodsRes queryGoodsRes = goodsApi.queryGoods(queryGoodsReq);
         if (queryGoodsRes == null || !queryGoodsRes.getRetCode().equals(TradeEnum.RetEnum.SUCCESS.getCode())) {
             throw new AceOrderException("未查询到改商品[" + confirmOrderReq.getGoodsId() + "]");
         }
@@ -253,10 +254,10 @@ public class OrderServiceImpl implements IOrderService {
         }
     }
 
-    private BigDecimal calculateShippingFee(BigDecimal goodsAmount){
-        if(goodsAmount.doubleValue()>100.00){
+    private BigDecimal calculateShippingFee(BigDecimal goodsAmount) {
+        if (goodsAmount.doubleValue() > 100.00) {
             return BigDecimal.ZERO;
-        }else {
+        } else {
             return new BigDecimal("10");
         }
 
