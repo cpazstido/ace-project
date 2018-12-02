@@ -2,7 +2,7 @@ package com.ace.trade.common.constants;
 
 public class TradeEnum {
     public enum RestServerEnum {
-        ORDER("localhost","order",8080),
+        ORDER("localhost","order",8085),
         PAY("localhost","pay",8081),
         COUPON("localhost","coupon",8082),
         GOODS("localhost","goods",8083),

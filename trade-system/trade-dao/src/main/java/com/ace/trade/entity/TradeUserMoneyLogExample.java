@@ -2,6 +2,7 @@ package com.ace.trade.entity;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TradeUserMoneyLogExample {
@@ -245,52 +246,62 @@ public class TradeUserMoneyLogExample {
             return (Criteria) this;
         }
 
-        public Criteria andMoneyLogTypeEqualTo(Integer value) {
+        public Criteria andMoneyLogTypeEqualTo(String value) {
             addCriterion("money_log_type =", value, "moneyLogType");
             return (Criteria) this;
         }
 
-        public Criteria andMoneyLogTypeNotEqualTo(Integer value) {
+        public Criteria andMoneyLogTypeNotEqualTo(String value) {
             addCriterion("money_log_type <>", value, "moneyLogType");
             return (Criteria) this;
         }
 
-        public Criteria andMoneyLogTypeGreaterThan(Integer value) {
+        public Criteria andMoneyLogTypeGreaterThan(String value) {
             addCriterion("money_log_type >", value, "moneyLogType");
             return (Criteria) this;
         }
 
-        public Criteria andMoneyLogTypeGreaterThanOrEqualTo(Integer value) {
+        public Criteria andMoneyLogTypeGreaterThanOrEqualTo(String value) {
             addCriterion("money_log_type >=", value, "moneyLogType");
             return (Criteria) this;
         }
 
-        public Criteria andMoneyLogTypeLessThan(Integer value) {
+        public Criteria andMoneyLogTypeLessThan(String value) {
             addCriterion("money_log_type <", value, "moneyLogType");
             return (Criteria) this;
         }
 
-        public Criteria andMoneyLogTypeLessThanOrEqualTo(Integer value) {
+        public Criteria andMoneyLogTypeLessThanOrEqualTo(String value) {
             addCriterion("money_log_type <=", value, "moneyLogType");
             return (Criteria) this;
         }
 
-        public Criteria andMoneyLogTypeIn(List<Integer> values) {
+        public Criteria andMoneyLogTypeLike(String value) {
+            addCriterion("money_log_type like", value, "moneyLogType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoneyLogTypeNotLike(String value) {
+            addCriterion("money_log_type not like", value, "moneyLogType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoneyLogTypeIn(List<String> values) {
             addCriterion("money_log_type in", values, "moneyLogType");
             return (Criteria) this;
         }
 
-        public Criteria andMoneyLogTypeNotIn(List<Integer> values) {
+        public Criteria andMoneyLogTypeNotIn(List<String> values) {
             addCriterion("money_log_type not in", values, "moneyLogType");
             return (Criteria) this;
         }
 
-        public Criteria andMoneyLogTypeBetween(Integer value1, Integer value2) {
+        public Criteria andMoneyLogTypeBetween(String value1, String value2) {
             addCriterion("money_log_type between", value1, value2, "moneyLogType");
             return (Criteria) this;
         }
 
-        public Criteria andMoneyLogTypeNotBetween(Integer value1, Integer value2) {
+        public Criteria andMoneyLogTypeNotBetween(String value1, String value2) {
             addCriterion("money_log_type not between", value1, value2, "moneyLogType");
             return (Criteria) this;
         }
@@ -365,52 +376,52 @@ public class TradeUserMoneyLogExample {
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeEqualTo(BigDecimal value) {
+        public Criteria andCreateTimeEqualTo(Date value) {
             addCriterion("create_time =", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeNotEqualTo(BigDecimal value) {
+        public Criteria andCreateTimeNotEqualTo(Date value) {
             addCriterion("create_time <>", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeGreaterThan(BigDecimal value) {
+        public Criteria andCreateTimeGreaterThan(Date value) {
             addCriterion("create_time >", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeGreaterThanOrEqualTo(BigDecimal value) {
+        public Criteria andCreateTimeGreaterThanOrEqualTo(Date value) {
             addCriterion("create_time >=", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeLessThan(BigDecimal value) {
+        public Criteria andCreateTimeLessThan(Date value) {
             addCriterion("create_time <", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeLessThanOrEqualTo(BigDecimal value) {
+        public Criteria andCreateTimeLessThanOrEqualTo(Date value) {
             addCriterion("create_time <=", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeIn(List<BigDecimal> values) {
+        public Criteria andCreateTimeIn(List<Date> values) {
             addCriterion("create_time in", values, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeNotIn(List<BigDecimal> values) {
+        public Criteria andCreateTimeNotIn(List<Date> values) {
             addCriterion("create_time not in", values, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeBetween(BigDecimal value1, BigDecimal value2) {
+        public Criteria andCreateTimeBetween(Date value1, Date value2) {
             addCriterion("create_time between", value1, value2, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeNotBetween(BigDecimal value1, BigDecimal value2) {
+        public Criteria andCreateTimeNotBetween(Date value1, Date value2) {
             addCriterion("create_time not between", value1, value2, "createTime");
             return (Criteria) this;
         }

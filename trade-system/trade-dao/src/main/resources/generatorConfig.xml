@@ -5,7 +5,7 @@
 <generatorConfiguration>
 
     <!-- 本地数据库驱动程序jar包的全路径 -->
-    <classPathEntry location="C:\software\apache-maven-3.5.0\repository\mysql\mysql-connector-java\5.1.40\mysql-connector-java-5.1.40.jar"/>
+    <classPathEntry location="D:\install\apache-maven-3.5.3\repository\mysql\mysql-connector-java\5.1.40\mysql-connector-java-5.1.40.jar"/>
 
     <context id="context" targetRuntime="MyBatis3">
         <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
@@ -17,46 +17,50 @@
         </commentGenerator>
 
         <!-- 数据库的相关配置 -->
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://10.10.1.79:3306/trade?useAffectedRows=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" userId="root" password="root"/>
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/trade?useAffectedRows=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" userId="root" password="root"/>
 
         <javaTypeResolver>
             <property name="forceBigDecimals" value="true"/>
         </javaTypeResolver>
 
         <!-- 实体类生成的位置 -->
-        <javaModelGenerator targetPackage="com.ace.trade.entity" targetProject="D:\project\idea\ace-project\trade-system\trade-dao\src\main/java">
+        <javaModelGenerator targetPackage="com.ace.trade.entity" targetProject="E:\project\java\ace-project\trade-system\trade-dao\src\main/java">
             <property name="enableSubPackages" value="false"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
         <!-- *Mapper.xml 文件的位置 -->
-        <sqlMapGenerator targetPackage="sqlmap.com.ace.trade.mapper" targetProject="D:\project\idea\ace-project\trade-system\trade-dao\src\main/resources">
+        <sqlMapGenerator targetPackage="sqlmap.com.ace.trade.mapper" targetProject="E:\project\java\ace-project\trade-system\trade-dao\src\main/resources">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
 
         <!-- Mapper 接口文件的位置 -->
-        <javaClientGenerator targetPackage="com.ace.trade.mapper" targetProject="D:\project\idea\ace-project\trade-system\trade-dao\src\main/java" type="XMLMAPPER">
+        <javaClientGenerator targetPackage="com.ace.trade.mapper" targetProject="E:\project\java\ace-project\trade-system\trade-dao\src\main/java" type="XMLMAPPER">
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
 
         <!-- 相关表的配置 -->
-        <table tableName="trade_goods" enableCountByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
-               enableUpdateByExample="true">
-            <generatedKey column="goods_id" sqlStatement="MySql" identity="true" />
-        </table>
-        <table tableName="trade_coupon" enableCountByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
-               enableUpdateByExample="true"/>
-        <table tableName="trade_user_money_log" enableCountByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
-               enableUpdateByExample="true"/>
-        <table tableName="trade_goods_number_log" enableCountByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
-               enableUpdateByExample="true"/>
-        <table tableName="trade_user" enableCountByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
-               enableUpdateByExample="true">
-            <generatedKey column="user_id" sqlStatement="MySql" identity="true" />
-        </table>
-        <table tableName="trade_order" enableCountByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
-               enableUpdateByExample="true"/>
-        <table tableName="trade_pay" enableCountByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
+        <!--<table tableName="trade_goods" enableCountByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
+               <!--enableUpdateByExample="true">-->
+            <!--<generatedKey column="goods_id" sqlStatement="MySql" identity="true" />-->
+        <!--</table>-->
+        <!--<table tableName="trade_coupon" enableCountByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
+               <!--enableUpdateByExample="true"/>-->
+        <!--<table tableName="trade_user_money_log" enableCountByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
+               <!--enableUpdateByExample="true"/>-->
+        <!--<table tableName="trade_goods_number_log" enableCountByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
+               <!--enableUpdateByExample="true">-->
+            <!--<generatedKey column="user_id" sqlStatement="MySql" identity="true" />-->
+        <!--</table>-->
+        <!--<table tableName="trade_user" enableCountByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
+               <!--enableUpdateByExample="true">-->
+            <!--<generatedKey column="user_id" sqlStatement="MySql" identity="true" />-->
+        <!--</table>-->
+        <!--<table tableName="trade_order" enableCountByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
+               <!--enableUpdateByExample="true"/>-->
+        <!--<table tableName="trade_pay" enableCountByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
+               <!--enableUpdateByExample="true"/>-->
+        <table tableName="trade_mq_producer_temp" enableCountByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
                enableUpdateByExample="true"/>
     </context>
 </generatorConfiguration>

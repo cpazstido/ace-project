@@ -10,6 +10,7 @@
 ">
 
     <import resource="classpath:xml/spring-dao.xml"/>
+    <import resource="spring-rocketmq-consumer.xml"/>
     <context:component-scan base-package="com.ace.trade.user"/>
     <mvc:annotation-driven/>
 </beans>

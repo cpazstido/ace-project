@@ -57,4 +57,14 @@ public class CancelOrderMQ {
     public void setUserMoney(BigDecimal userMoney) {
         this.userMoney = userMoney;
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

@@ -5,6 +5,7 @@
 
     <bean id="aceMQProducer" class="com.ace.trade.common.rocketmq.AceMQProducer" init-method="init">
         <property name="groupName" value="OrderProducerGroup" />
-        <property name="namesrvAddr" value="10.10.1.231:9876" />
+        <property name="namesrvAddr" value="localhost:9876" />
+
     </bean>
 </beans>

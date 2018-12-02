@@ -1,6 +1,7 @@
 package com.ace.trade.user.api;
 
 import com.ace.trade.common.api.IUserApi;
+import com.ace.trade.common.constants.TradeEnum;
 import com.ace.trade.common.protocol.user.ChangeUserMoneyReq;
 import com.ace.trade.common.protocol.user.ChangeUserMoneyRes;
 import com.ace.trade.common.protocol.user.QueryUserReq;
@@ -21,8 +22,16 @@ public class UserApiImpl implements IUserApi {
         return this.userService.queryUserById(queryUserReq);
     }
 
-    @Override
-    public ChangeUserMoneyRes changeUserMoney(ChangeUserMoneyReq changeUserMoneyReq) {
-        return null;
+    @RequestMapping(value = "/changeUserMoney",method = RequestMethod.POST)
+    @ResponseBody
+    public ChangeUserMoneyRes changeUserMoney(@RequestBody ChangeUserMoneyReq changeUserMoneyReq) {
+        ChangeUserMoneyRes changeUserMoneyRes = new ChangeUserMoneyRes();
+        try {
+            changeUserMoneyRes = this.userService.changeUserMoney(changeUserMoneyReq);
+        } catch (Exception e) {
+            changeUserMoneyRes.setRetCode(TradeEnum.RetEnum.FAIL.getCode());
+            changeUserMoneyRes.setRetInfo(e.getMessage());
+        }
+        return changeUserMoneyRes;
     }
 }

@@ -225,4 +225,19 @@
       used_time = #{usedTime,jdbcType=TIMESTAMP}
     where coupon_id = #{couponId,jdbcType=VARCHAR}
   </update>
+  <update id="useCoupon" parameterType="com.ace.trade.entity.TradeCoupon">
+    update trade_coupon
+    set is_used = '1',
+    order_id = #{userId,jdbcType=INTEGER},
+    used_time = now()
+    where coupon_id = #{couponId,jdbcType=VARCHAR}
+    and is_used = '0'
+  </update>
+  <update id="unUseCoupon" parameterType="com.ace.trade.entity.TradeCoupon">
+    update trade_coupon
+    set is_used = '0',
+    order_id = null,
+    used_time = null
+    where coupon_id = #{couponId,jdbcType=VARCHAR}
+  </update>
 </mapper>

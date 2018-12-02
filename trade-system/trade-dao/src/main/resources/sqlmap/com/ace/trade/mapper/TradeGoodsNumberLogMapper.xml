@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ace.trade.mapper.TradeGoodsNumberLogMapper" >
   <resultMap id="BaseResultMap" type="com.ace.trade.entity.TradeGoodsNumberLog" >
-    <result column="goods_id" property="goodsId" jdbcType="INTEGER" />
-    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <id column="goods_id" property="goodsId" jdbcType="INTEGER" />
+    <id column="order_id" property="orderId" jdbcType="VARCHAR" />
     <result column="goods_number" property="goodsNumber" jdbcType="INTEGER" />
     <result column="log_time" property="logTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -82,6 +82,18 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.ace.trade.entity.TradeGoodsNumberLogKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from trade_goods_number_log
+    where goods_id = #{goodsId,jdbcType=INTEGER}
+      and order_id = #{orderId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.ace.trade.entity.TradeGoodsNumberLogKey" >
+    delete from trade_goods_number_log
+    where goods_id = #{goodsId,jdbcType=INTEGER}
+      and order_id = #{orderId,jdbcType=VARCHAR}
+  </delete>
   <delete id="deleteByExample" parameterType="com.ace.trade.entity.TradeGoodsNumberLogExample" >
     delete from trade_goods_number_log
     <if test="_parameter != null" >
@@ -160,5 +172,25 @@
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ace.trade.entity.TradeGoodsNumberLog" >
+    update trade_goods_number_log
+    <set >
+      <if test="goodsNumber != null" >
+        goods_number = #{goodsNumber,jdbcType=INTEGER},
+      </if>
+      <if test="logTime != null" >
+        log_time = #{logTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where goods_id = #{goodsId,jdbcType=INTEGER}
+      and order_id = #{orderId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ace.trade.entity.TradeGoodsNumberLog" >
+    update trade_goods_number_log
+    set goods_number = #{goodsNumber,jdbcType=INTEGER},
+      log_time = #{logTime,jdbcType=TIMESTAMP}
+    where goods_id = #{goodsId,jdbcType=INTEGER}
+      and order_id = #{orderId,jdbcType=VARCHAR}
   </update>
 </mapper>

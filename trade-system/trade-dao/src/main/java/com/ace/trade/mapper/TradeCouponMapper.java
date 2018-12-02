@@ -27,4 +27,8 @@ public interface TradeCouponMapper {
     int updateByPrimaryKeySelective(TradeCoupon record);
 
     int updateByPrimaryKey(TradeCoupon record);
+
+    int useCoupon(TradeCoupon record);
+
+    int unUseCoupon(TradeCoupon record);
 }

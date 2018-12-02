@@ -6,7 +6,7 @@
     <bean id="processor" class="TestProcessor"/>
     <bean id="aceMQConsumer" class="com.ace.trade.common.rocketmq.AceMQConsumer" init-method="init">
         <property name="groupName" value="AceMQConsumerGroup" />
-        <property name="namesrvAddr" value="10.10.1.231:9876" />
+        <property name="namesrvAddr" value="localhost:9876" />
         <property name="topic" value="TestTopic" />
         <property name="processor" ref="processor" />
     </bean>

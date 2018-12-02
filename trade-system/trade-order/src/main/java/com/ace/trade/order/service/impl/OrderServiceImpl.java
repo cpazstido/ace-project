@@ -28,6 +28,7 @@ import com.ace.trade.entity.TradeOrder;
 import com.ace.trade.mapper.TradeOrderMapper;
 import com.ace.trade.order.service.IOrderService;
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,6 @@ public class OrderServiceImpl implements IOrderService {
     private ICouponApi couponApi;
     @Autowired
     private IUserApi userApi;
-
     @Autowired
     private AceMQProducer aceMQProducer;
     @Autowired
@@ -61,7 +61,9 @@ public class OrderServiceImpl implements IOrderService {
             checkConfirmOrderReq(confirmOrderReq, queryGoodsRes);
             //2、创建不可见订单
             String orderId = saveNoConfirmOrder(confirmOrderReq);
+            confirmOrderRes.setOrderId(orderId);
             //3、调用远程服务，扣优惠券、扣库存、扣余额，如果调用成功-》更改订单状态可见；失败-》发送MQ消息，进行取消订单
+            callRemoteService(orderId,confirmOrderReq);
         } catch (Exception e) {
             confirmOrderRes.setRetCode(TradeEnum.RetEnum.FAIL.getCode());
             confirmOrderRes.setRetInfo(e.getMessage());
@@ -79,7 +81,7 @@ public class OrderServiceImpl implements IOrderService {
                 changeCouponStatusReq.setIsUsed(TradeEnum.YesNoEnum.YES.getCode());
                 changeCouponStatusReq.setOrderId(orderId);
                 ChangeCouponStatusRes changeCouponStatusRes = couponApi.changeCouponStatus(changeCouponStatusReq);
-                if(!changeCouponStatusRes.getRetCode().equals(TradeEnum.RetEnum.SUCCESS)){
+                if(!changeCouponStatusRes.getRetCode().equals(TradeEnum.RetEnum.SUCCESS.getCode())){
                     throw new Exception("优惠券使用失败！");
                 }
             }
@@ -89,6 +91,7 @@ public class OrderServiceImpl implements IOrderService {
                 ChangeUserMoneyReq changeUserMoneyReq = new ChangeUserMoneyReq();
                 changeUserMoneyReq.setOrderId(orderId);
                 changeUserMoneyReq.setUserId(confirmOrderReq.getUserId());
+                changeUserMoneyReq.setUserMoney(changeUserMoneyReq.getUserMoney());
                 changeUserMoneyReq.setMoneyLogType(TradeEnum.UserMoneyLogTypeEnum.PAID.getCode());
                 ChangeUserMoneyRes changeUserMoneyRes = userApi.changeUserMoney(changeUserMoneyReq);
                 if(!changeUserMoneyRes.getRetCode().equals(TradeEnum.RetEnum.SUCCESS.getCode())){
@@ -125,11 +128,12 @@ public class OrderServiceImpl implements IOrderService {
             cancelOrderMQ.setCouponId(confirmOrderReq.getCouponId());
             cancelOrderMQ.setUserMoney(confirmOrderReq.getMoneyPaid());
             try {
-                SendResult sendResult = aceMQProducer.sendMessage(MQEnums.TopicEnum.ORDER_CANCEL,orderId,JSONUtils.toJSONString(cancelOrderMQ));
+                SendResult sendResult = aceMQProducer.sendMessage(MQEnums.TopicEnum.ORDER_CANCEL,orderId, JSON.toJSONString(cancelOrderMQ));
                 System.out.println(sendResult);
             } catch (AceMQException ex) {
                 //如果发送失败会有一个定时器轮询，找出长时间未确认的订单，补发取消消息
             }
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -231,7 +235,7 @@ public class OrderServiceImpl implements IOrderService {
             throw new AceOrderException("收货地址不能为空");
         }
 
-        if (queryGoodsRes == null || queryGoodsRes.getRetCode().equals(TradeEnum.RetEnum.SUCCESS.getCode())) {
+        if (queryGoodsRes == null || !queryGoodsRes.getRetCode().equals(TradeEnum.RetEnum.SUCCESS.getCode())) {
             throw new AceOrderException("未查询到改商品[" + confirmOrderReq.getGoodsId() + "]");
         }
 

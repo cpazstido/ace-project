@@ -8,7 +8,7 @@
         <property name="serverEnum" value="USER"/>
     </bean>
     <bean id="couponClient" class="com.ace.trade.common.client.RestClientProxyFactoryBeanSpring">
-        <property name="serviceInterface" value="com.ace.trade.common.api.IGoodsApi"/>
+        <property name="serviceInterface" value="com.ace.trade.common.api.ICouponApi"/>
         <property name="serverEnum" value="COUPON"/>
     </bean>
     <bean id="goodsClient" class="com.ace.trade.common.client.RestClientProxyFactoryBeanSpring">

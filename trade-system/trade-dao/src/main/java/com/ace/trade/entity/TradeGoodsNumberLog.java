@@ -3,32 +3,12 @@ package com.ace.trade.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-public class TradeGoodsNumberLog implements Serializable {
-    private Integer goodsId;
-
-    private String orderId;
-
+public class TradeGoodsNumberLog extends TradeGoodsNumberLogKey implements Serializable {
     private Integer goodsNumber;
 
     private Date logTime;
 
     private static final long serialVersionUID = 1L;
-
-    public Integer getGoodsId() {
-        return goodsId;
-    }
-
-    public void setGoodsId(Integer goodsId) {
-        this.goodsId = goodsId;
-    }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId == null ? null : orderId.trim();
-    }
 
     public Integer getGoodsNumber() {
         return goodsNumber;
@@ -52,8 +32,6 @@ public class TradeGoodsNumberLog implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", goodsId=").append(goodsId);
-        sb.append(", orderId=").append(orderId);
         sb.append(", goodsNumber=").append(goodsNumber);
         sb.append(", logTime=").append(logTime);
         sb.append("]");
