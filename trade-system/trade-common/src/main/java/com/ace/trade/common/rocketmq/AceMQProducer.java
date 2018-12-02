@@ -72,39 +72,20 @@ public class AceMQProducer {
             throw new AceMQException("messageText is blank!");
         }
 
-        SendResult sendResult = null;
+        Message message = new Message(topic,tags,keys,messageText.getBytes());
+
         try {
-            Message msg = new Message("TopicTest",
-                    "TagA",
-                    "OrderID188",
-                    "Hello world".getBytes(RemotingHelper.DEFAULT_CHARSET));
-            sendResult = producer.send(msg);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (MQClientException e) {
-            e.printStackTrace();
-        } catch (RemotingException e) {
-            e.printStackTrace();
-        } catch (MQBrokerException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            SendResult sendResult = this.producer.send(message);
+            return sendResult;
+        } catch (Exception e) {
+            LOGGER.error("send message error:\ntopic:{}\ntags:{}\nkeys:{}\nmessage:{}\n",
+                    topic,
+                    tags,
+                    keys,
+                    messageText,
+                    e.getMessage(),e);
+            throw new AceMQException(e);
         }
-        return sendResult;
-//        Message message = new Message(topic,tags,keys,messageText.getBytes());
-//
-//        try {
-//            SendResult sendResult = this.producer.send(message);
-//            return sendResult;
-//        } catch (Exception e) {
-//            LOGGER.error("send message error:\ntopic:{}\ntags:{}\nkeys:{}\nmessage:{}\n",
-//                    topic,
-//                    tags,
-//                    keys,
-//                    messageText,
-//                    e.getMessage(),e);
-//            throw new AceMQException(e);
-//        }
     }
 
     public SendResult sendMessage(MQEnums.TopicEnum topicEnum,String keys, String messageText) throws AceMQException {
