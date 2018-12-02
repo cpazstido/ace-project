@@ -79,7 +79,7 @@ public class UserServiceImpl implements IUserService {
         int count = this.tradeUserMoneyLogMapper.countByExample(logExample);
 
         //订单付款
-        if(changeUserMoneyReq.getMoneyLogType().equals(TradeEnum.UserMoneyLogTypeEnum.PAID.getCode())){}{
+        if(changeUserMoneyReq.getMoneyLogType().equals(TradeEnum.UserMoneyLogTypeEnum.PAID.getCode())){
             if(count>0){
                 throw new RuntimeException("已经付过款，不能再付款");
             }
