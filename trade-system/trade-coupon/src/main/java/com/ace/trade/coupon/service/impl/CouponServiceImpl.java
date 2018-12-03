@@ -54,12 +54,15 @@ public class CouponServiceImpl implements ICouponService {
             TradeCoupon record = new TradeCoupon();
             record.setCouponId(changeCouponStatusReq.getCouponId());
             record.setOrderId(changeCouponStatusReq.getOrderId());
+
             if (changeCouponStatusReq.getIsUsed().equals(TradeEnum.YesNoEnum.YES.getCode())) {
+                //使用优惠券
                 int i = this.tradeCouponMapper.useCoupon(record);
                 if (i <= 0) {
                     throw new Exception("使用该优惠券失败");
                 }
             } else if (changeCouponStatusReq.getIsUsed().equals(TradeEnum.YesNoEnum.NO.getCode())) {
+                //退款时退优惠券
                 this.tradeCouponMapper.unUseCoupon(record);
             }
 

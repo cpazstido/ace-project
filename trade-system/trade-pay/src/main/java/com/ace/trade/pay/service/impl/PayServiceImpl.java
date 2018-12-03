@@ -50,7 +50,7 @@ public class PayServiceImpl implements IPayService {
             payExample.createCriteria().andOrderIdEqualTo(createPaymentReq.getOrderId())
                     .andIsPaidEqualTo(TradeEnum.YesNoEnum.YES.getCode());
             int count = this.tradePayMapper.countByExample(payExample);
-            if(count>0){
+            if (count > 0) {
                 throw new Exception("该订单已支付");
             }
             String payId = IDGenerator.generateUUID();
@@ -60,10 +60,10 @@ public class PayServiceImpl implements IPayService {
             tradePay.setIsPaid(TradeEnum.YesNoEnum.NO.getCode());
             tradePay.setPayAmount(createPaymentReq.getPayAmount());
             tradePayMapper.insert(tradePay);
-            System.out.println("创建支付订单成功："+payId);
+            System.out.println("创建支付订单成功：" + payId);
         } catch (Exception e) {
             createPaymentRes.setRetCode(TradeEnum.RetEnum.FAIL.getCode());
-            createPaymentRes.setRetInfo("创建支付订单失败："+e.getMessage());
+            createPaymentRes.setRetInfo("创建支付订单失败：" + e.getMessage());
         }
         return createPaymentRes;
     }
@@ -73,21 +73,21 @@ public class PayServiceImpl implements IPayService {
         CallbackPaymentRes callbackPaymentRes = new CallbackPaymentRes();
         callbackPaymentRes.setRetCode(TradeEnum.RetEnum.SUCCESS.getCode());
         callbackPaymentRes.setRetInfo(TradeEnum.RetEnum.SUCCESS.getDesc());
-        if(callbackPaymentReq.getIsPaid().equals(TradeEnum.YesNoEnum.YES.getCode())){
+        if (callbackPaymentReq.getIsPaid().equals(TradeEnum.YesNoEnum.YES.getCode())) {
             //更新支付状态
             TradePay tradePay = tradePayMapper.selectByPrimaryKey(callbackPaymentReq.getPayId());
-            if(tradePay==null){
+            if (tradePay == null) {
                 throw new RuntimeException("未找到支付单");
             }
 
-            if(tradePay.getIsPaid().equals(TradeEnum.YesNoEnum.YES.getCode())){
+            if (tradePay.getIsPaid().equals(TradeEnum.YesNoEnum.YES.getCode())) {
                 throw new RuntimeException("该支付单已支付");
             }
 
             tradePay.setIsPaid(TradeEnum.YesNoEnum.YES.getCode());
             int i = tradePayMapper.updateByPrimaryKeySelective(tradePay);
             //发送可靠消息
-            if(i==1){
+            if (i == 1) {
                 final PaidMQ paidMQ = new PaidMQ();
                 paidMQ.setPayAmount(tradePay.getPayAmount());
                 paidMQ.setOrderId(tradePay.getOrderId());
@@ -104,9 +104,9 @@ public class PayServiceImpl implements IPayService {
                 executorService.submit(new Runnable() {
                     public void run() {
                         try {
-                            SendResult sendResult = aceMQProducer.sendMessage(MQEnums.TopicEnum.PAY_PAID,paidMQ.getPayId(),JSON.toJSONString(paidMQ));
+                            SendResult sendResult = aceMQProducer.sendMessage(MQEnums.TopicEnum.PAY_PAID, paidMQ.getPayId(), JSON.toJSONString(paidMQ));
                             System.out.println(sendResult);
-                            if(sendResult.getSendStatus().equals(SendStatus.SEND_OK)){
+                            if (sendResult.getSendStatus().equals(SendStatus.SEND_OK)) {
                                 tradeMqProducerTempMapper.deleteByPrimaryKey(mqProducerTemp.getId());
                                 System.out.println("删除消息表成功");
                             }
@@ -115,10 +115,10 @@ public class PayServiceImpl implements IPayService {
                         }
                     }
                 });
-            }else {
+            } else {
                 throw new RuntimeException("该支付单已支付");
             }
         }
-        return null;
+        return callbackPaymentRes;
     }
 }

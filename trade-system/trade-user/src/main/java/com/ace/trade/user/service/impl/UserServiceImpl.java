@@ -14,6 +14,7 @@ import com.ace.trade.user.service.IUserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -36,8 +37,8 @@ public class UserServiceImpl implements IUserService {
                 throw new RuntimeException("请求参数不正确");
             }
             TradeUser tradeUser = tradeUserMapper.selectByPrimaryKey(queryUserReq.getUserId());
-            if (tradeUser!=null){
-                BeanUtils.copyProperties(tradeUser,queryUserRes);
+            if (tradeUser != null) {
+                BeanUtils.copyProperties(tradeUser, queryUserRes);
             }
         } catch (Exception e) {
             queryUserRes.setRetCode(TradeEnum.RetEnum.FAIL.getCode());
@@ -47,15 +48,16 @@ public class UserServiceImpl implements IUserService {
     }
 
 
+    @Transactional
     public ChangeUserMoneyRes changeUserMoney(ChangeUserMoneyReq changeUserMoneyReq) {
         ChangeUserMoneyRes changeUserMoneyRes = new ChangeUserMoneyRes();
         changeUserMoneyRes.setRetCode(TradeEnum.RetEnum.SUCCESS.getCode());
         changeUserMoneyRes.setRetInfo(TradeEnum.RetEnum.SUCCESS.getDesc());
 
-        if(changeUserMoneyReq ==null||changeUserMoneyReq.getUserId()==null||changeUserMoneyReq.getUserMoney()==null){
+        if (changeUserMoneyReq == null || changeUserMoneyReq.getUserId() == null || changeUserMoneyReq.getUserMoney() == null) {
             throw new RuntimeException("请求参数不正确");
         }
-        if(changeUserMoneyReq.getUserMoney().compareTo(BigDecimal.ZERO)<=0){
+        if (changeUserMoneyReq.getUserMoney().compareTo(BigDecimal.ZERO) <= 0) {
             throw new RuntimeException("金额不能小于0");
         }
 
@@ -79,17 +81,17 @@ public class UserServiceImpl implements IUserService {
         int count = this.tradeUserMoneyLogMapper.countByExample(logExample);
 
         //订单付款
-        if(changeUserMoneyReq.getMoneyLogType().equals(TradeEnum.UserMoneyLogTypeEnum.PAID.getCode())){
-            if(count>0){
+        if (changeUserMoneyReq.getMoneyLogType().equals(TradeEnum.UserMoneyLogTypeEnum.PAID.getCode())) {
+            if (count > 0) {
                 throw new RuntimeException("已经付过款，不能再付款");
             }
             tradeUserMapper.reduceUserMoney(tradeUser);
         }
 
         //订单退款
-        if(changeUserMoneyReq.getMoneyLogType().equals(TradeEnum.UserMoneyLogTypeEnum.REFUND.getCode())){
+        if (changeUserMoneyReq.getMoneyLogType().equals(TradeEnum.UserMoneyLogTypeEnum.REFUND.getCode())) {
 
-            if(count ==0){
+            if (count == 0) {
                 throw new RuntimeException("没有付款信息，不能退款");
             }
             //防止多次退款
@@ -99,7 +101,7 @@ public class UserServiceImpl implements IUserService {
                     .andOrderIdEqualTo(changeUserMoneyReq.getOrderId())
                     .andMoneyLogTypeEqualTo(TradeEnum.UserMoneyLogTypeEnum.REFUND.getCode());
             count = this.tradeUserMoneyLogMapper.countByExample(logExample);
-            if(count>0){
+            if (count > 0) {
                 throw new RuntimeException("已经退过款了，不能退款");
             }
             tradeUserMapper.addUserMoney(tradeUser);

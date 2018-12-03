@@ -11,6 +11,7 @@ import com.ace.trade.mapper.TradeGoodsNumberLogMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -44,6 +45,7 @@ public class GoodsServerImpl implements IGoodsService {
         return queryGoodsRes;
     }
 
+    @Transactional
     public ReduceGoodsNumberRes reduceGoodsNumber(ReduceGoodsNumberReq reduceGoodsNumberReq) {
         ReduceGoodsNumberRes reduceGoodsNumberRes = new ReduceGoodsNumberRes();
         reduceGoodsNumberRes.setRetCode(TradeEnum.RetEnum.SUCCESS.getCode());
@@ -80,13 +82,13 @@ public class GoodsServerImpl implements IGoodsService {
                     || addGoodsNumberReq.getGoodsNumber() == null || addGoodsNumberReq.getGoodsNumber() <= 0) {
                 throw new RuntimeException("增加库存请求参数不正确");
             }
-            if(addGoodsNumberReq.getOrderId()!=null){
+            if (addGoodsNumberReq.getOrderId() != null) {
                 TradeGoodsNumberLogKey key = new TradeGoodsNumberLogKey();
                 key.setGoodsId(addGoodsNumberReq.getGoodsId());
                 key.setOrderId(addGoodsNumberReq.getOrderId());
 
                 TradeGoodsNumberLog tradeGoodsNumberLog = this.tradeGoodsNumberLogMapper.selectByPrimaryKey(key);
-                if(tradeGoodsNumberLog==null){
+                if (tradeGoodsNumberLog == null) {
                     throw new Exception("未涨到扣库存记录");
                 }
             }
@@ -94,7 +96,7 @@ public class GoodsServerImpl implements IGoodsService {
             tradeGoods.setGoodsId(addGoodsNumberReq.getGoodsId());
             tradeGoods.setGoodsNumber(addGoodsNumberReq.getGoodsNumber());
             int i = this.tradeGoodsMapper.addGoodsNumber(tradeGoods);
-            if(i<=0){
+            if (i <= 0) {
                 throw new Exception("增加库存失败");
             }
         } catch (Exception e) {

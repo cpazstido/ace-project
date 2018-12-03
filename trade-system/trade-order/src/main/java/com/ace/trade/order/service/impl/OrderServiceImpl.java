@@ -107,9 +107,9 @@ public class OrderServiceImpl implements IOrderService {
                 throw new Exception("扣库存失败！");
             }
 
-            if(true){
-                throw new Exception("手动抛出异常");
-            }
+//            if(1==1){
+//                throw new Exception("手动抛出异常");
+//            }
 
             //更改订单状态
             TradeOrder tradeOrder = new TradeOrder();
