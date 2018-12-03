@@ -102,7 +102,7 @@ public class PayServiceImpl implements IPayService {
                 tradeMqProducerTempMapper.insert(mqProducerTemp);
                 //异步发送mq消息通知库存系统发货
                 //发送成功清空发送表;
-                //发送失败定时任务重新发送并清空发送表
+                //发送失败，会有定时任务重新发送然后清空发送表
                 executorService.submit(new Runnable() {
                     public void run() {
                         try {
