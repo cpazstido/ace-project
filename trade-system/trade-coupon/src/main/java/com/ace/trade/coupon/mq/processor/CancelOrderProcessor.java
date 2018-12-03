@@ -26,6 +26,11 @@ public class CancelOrderProcessor implements IMessageProcessor {
             String tags = messageExt.getTags();
             String keys = messageExt.getKeys();
             logger.info("coupon CancelOrderProcessor receive message:"+messageExt);
+            String messageInfo =
+                    "\n========CancelOrderProcessor receive message========\n"
+                    +messageExt+"\n"
+                    +"========CancelOrderProcessor receive message========\n";
+            System.out.println(messageInfo);
 
             CancelOrderMQ cancelOrderMQ = JSON.parseObject(body,CancelOrderMQ.class);
             if(StringUtils.isNotBlank(cancelOrderMQ.getCouponId())){

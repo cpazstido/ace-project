@@ -27,6 +27,12 @@ public class CancelOrderProcessor implements IMessageProcessor {
             String keys = messageExt.getKeys();
             logger.info("user CancelOrderProcessor receive message:"+messageExt);
 
+            String messageInfo =
+                    "\n========CancelOrderProcessor receive message========\n"
+                            +messageExt+"\n"
+                            +"========CancelOrderProcessor receive message========\n";
+            System.out.println(messageInfo);
+
             CancelOrderMQ cancelOrderMQ = JSON.parseObject(body,CancelOrderMQ.class);
             if(cancelOrderMQ.getUserMoney() !=null&&cancelOrderMQ.getUserMoney().compareTo(BigDecimal.ZERO)==1){
                 ChangeUserMoneyReq changeUserMoneyReq = new ChangeUserMoneyReq();

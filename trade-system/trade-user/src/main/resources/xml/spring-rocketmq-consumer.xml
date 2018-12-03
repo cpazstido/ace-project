@@ -6,7 +6,7 @@
     <bean id="cancelOrderProcessor" class="com.ace.trade.user.mq.processor.CancelOrderProcessor"/>
     <bean id="orderConsumer" class="com.ace.trade.common.rocketmq.AceMQConsumer" init-method="init">
         <property name="groupName" value="user_orderTopic_cancel_group" />
-        <property name="namesrvAddr" value="localhost:9876" />
+        <property name="namesrvAddr" value="10.10.1.231:9876" />
         <property name="tag" value="cancel"/>
         <property name="topic" value="orderTopic" />
         <property name="processor" ref="cancelOrderProcessor" />

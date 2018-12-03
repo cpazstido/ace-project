@@ -36,6 +36,12 @@ public class CancelOrderProcessor implements IMessageProcessor {
             String keys = messageExt.getKeys();
             logger.info("goods CancelOrderProcessor receive message:" + messageExt);
 
+            String messageInfo =
+                    "\n========CancelOrderProcessor receive message========\n"
+                            + messageExt + "\n"
+                            + "========CancelOrderProcessor receive message========\n";
+            System.out.println(messageInfo);
+
             TradeMqConsumerLogKey key = new TradeMqConsumerLogKey();
             key.setGroupName(groupName);
             key.setMsgTag(tags);
